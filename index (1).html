@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Reference Documentation - v2.1 Refresh</title>
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-green: #22c55e;
+            --accent-amber: #f59e0b;
+            --accent-red: #ef4444;
+            --border-color: #475569;
+            --font-mono: 'Fira Code', 'Courier New', Courier, monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Navigation */
+        sidebar {
+            width: 280px;
+            background-color: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            padding: 20px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        sidebar h2 {
+            font-size: 1.2rem;
+            color: var(--accent-blue);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        sidebar .version-badge {
+            display: inline-block;
+            background: #0284c7;
+            color: white;
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        sidebar ul {
+            list-style: none;
+        }
+
+        sidebar li {
+            margin-bottom: 10px;
+        }
+
+        sidebar a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            display: block;
+            padding: 6px 10px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        sidebar a:hover, sidebar a.active {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        /* Main Content */
+        main {
+            margin-left: 280px;
+            padding: 40px;
+            max-width: 1100px;
+            width: 100%;
+        }
+
+        header {
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* Endpoint Card */
+        .endpoint-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .endpoint-header {
+            padding: 15px 20px;
+            background-color: rgba(255, 255, 255, 0.03);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .method {
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+        }
+
+        .method.get { background-color: rgba(34, 197, 94, 0.2); color: var(--accent-green); border: 1px solid var(--accent-green); }
+        .method.post { background-color: rgba(56, 189, 248, 0.2); color: var(--accent-blue); border: 1px solid var(--accent-blue); }
+        .method.put { background-color: rgba(245, 158, 11, 0.2); color: var(--accent-amber); border: 1px solid var(--accent-amber); }
+        .method.delete { background-color: rgba(239, 68, 68, 0.2); color: var(--accent-red); border: 1px solid var(--accent-red); }
+
+        .path {
+            font-family: var(--font-mono);
+            font-weight: 600;
+            font-size: 1.05rem;
+        }
+
+        .endpoint-body {
+            padding: 20px;
+        }
+
+        .section-title {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--accent-blue);
+            margin: 15px 0 10px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .param-name {
+            font-family: var(--font-mono);
+            color: var(--accent-blue);
+        }
+
+        .param-type {
+            font-family: var(--font-mono);
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        .required-tag {
+            color: var(--accent-red);
+            font-size: 0.75rem;
+            margin-left: 4px;
+        }
+
+        /* Code Blocks */
+        pre {
+            background-color: var(--bg-primary);
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            overflow-x: auto;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: #e2e8f0;
+            margin-bottom: 15px;
+        }
+
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background-color: rgba(34, 197, 94, 0.15);
+            color: var(--accent-green);
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            float: right;
+        }
+
+        .unverified-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background-color: rgba(245, 158, 11, 0.15);
+            color: var(--accent-amber);
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            float: right;
+        }
+    </style>
+</head>
+<body>
+
+    <sidebar>
+        <h2>REST API Ref</h2>
+        <span class="version-badge">OpenAPI v3.0.3</span>
+        <ul>
+            <li><a href="#overview">Overview & Auth</a></li>
+            <li><a href="#get-users">GET /api/v2/users</a></li>
+            <li><a href="#post-users">POST /api/v2/users</a></li>
+            <li><a href="#get-user-by-id">GET /api/v2/users/{id}</a></li>
+            <li><a href="#delete-user">DELETE /api/v2/users/{id}</a></li>
+            <li><a href="#error-handling">Error Handling Taxonomy</a></li>
+        </ul>
+    </sidebar>
+
+    <main>
+        <header id="overview">
+            <h1>API Reference Documentation (Refreshed)</h1>
+            <p>Updated to align with current OpenAPI v3.0.3 specification and verified live endpoint responses.</p>
+        </header>
+
+        <!-- Endpoint 1 -->
+        <div class="endpoint-card" id="get-users">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/api/v2/users</span>
+                <span class="verified-badge">✓ Verified Live</span>
+            </div>
+            <div class="endpoint-body">
+                <p>Retrieves a paginated list of user objects with filtering and sorting parameters.</p>
+                
+                <div class="section-title">Query Parameters</div>
+                <table>
+                    <thead>
+                        <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><span class="param-name">page</span></td><td><span class="param-type">integer</span></td><td>Page number for pagination. Default: <code>1</code></td></tr>
+                        <tr><td><span class="param-name">limit</span></td><td><span class="param-type">integer</span></td><td>Number of items per page (Max: 100). Default: <code>20</code></td></tr>
+                        <tr><td><span class="param-name">status</span></td><td><span class="param-type">string</span></td><td>Filter by user state: <code>active</code>, <code>pending</code>, <code>suspended</code></td></tr>
+                    </tbody>
+                </table>
+
+                <div class="section-title">Response Example (HTTP 200 OK)</div>
+<pre>{
+  "status": "success",
+  "data": [
+    {
+      "id": "usr_9012a8f",
+      "email": "m.manyuele@example.com",
+      "full_name": "Mark Lemayian Manyuele",
+      "status": "active",
+      "created_at": "2026-08-15T09:30:00Z"
+    }
+  ],
+  "pagination": {
+    "current_page": 1,
+    "total_pages": 12,
+    "total_records": 240
+  }
+}</pre>
+            </div>
+        </div>
+
+        <!-- Endpoint 2 -->
+        <div class="endpoint-card" id="post-users">
+            <div class="endpoint-header">
+                <span class="method post">POST</span>
+                <span class="path">/api/v2/users</span>
+                <span class="verified-badge">✓ Verified Live</span>
+            </div>
+            <div class="endpoint-body">
+                <p>Creates a new user profile. Requires <code>Bearer</code> token authentication.</p>
+                
+                <div class="section-title">Request Body (application/json)</div>
+                <table>
+                    <thead>
+                        <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><span class="param-name">email</span> <span class="required-tag">*required</span></td><td><span class="param-type">string</span></td><td>Valid RFC-5322 email address.</td></tr>
+                        <tr><td><span class="param-name">full_name</span> <span class="required-tag">*required</span></td><td><span class="param-type">string</span></td><td>User legal full name.</td></tr>
+                        <tr><td><span class="param-name">role</span></td><td><span class="param-type">string</span></td><td>User system role: <code>analyst</code>, <code>admin</code>. Default: <code>analyst</code></td></tr>
+                    </tbody>
+                </table>
+
+                <div class="section-title">Response Example (HTTP 201 Created)</div>
+<pre>{
+  "status": "created",
+  "data": {
+    "id": "usr_3341b2c",
+    "email": "m.manyuele@example.com",
+    "full_name": "Mark Lemayian Manyuele",
+    "role": "analyst",
+    "created_at": "2026-10-13T10:45:00Z"
+  }
+}</pre>
+            </div>
+        </div>
+
+        <!-- Endpoint 3 -->
+        <div class="endpoint-card" id="delete-user">
+            <div class="endpoint-header">
+                <span class="method delete">DELETE</span>
+                <span class="path">/api/v2/users/{id}</span>
+                <span class="unverified-badge">⚠ Unverified (Staging Restricted)</span>
+            </div>
+            <div class="endpoint-body">
+                <p>Permanently deletes a user account by ID. (Flagged for verification upon production release permission).</p>
+                
+                <div class="section-title">Path Parameters</div>
+                <table>
+                    <thead>
+                        <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><span class="param-name">id</span> <span class="required-tag">*required</span></td><td><span class="param-type">string</span></td><td>Unique user alphanumeric ID.</td></tr>
+                    </tbody>
+                </table>
+
+                <div class="section-title">Response Example (HTTP 204 No Content)</div>
+<pre>/* No Content Returned */</pre>
+            </div>
+        </div>
+
+        <!-- Error Handling -->
+        <div class="endpoint-card" id="error-handling">
+            <div class="endpoint-header">
+                <span class="method put">TAXONOMY</span>
+                <span class="path">Standard Error Responses</span>
+                <span class="verified-badge">✓ Verified Live</span>
+            </div>
+            <div class="endpoint-body">
+                <p>All endpoints adhere to RFC 7807 Problem Details specification for API error responses.</p>
+                
+                <div class="section-title">HTTP Status Code Map</div>
+                <table>
+                    <thead>
+                        <tr><th>Status Code</th><th>Error Type</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>400 Bad Request</code></td><td>Invalid Payload</td><td>Missing required parameters or malformed JSON syntax.</td></tr>
+                        <tr><td><code>401 Unauthorized</code></td><td>Authentication Error</td><td>Missing, expired, or invalid HTTP Bearer token.</td></tr>
+                        <tr><td><code>404 Not Found</code></td><td>Resource Missing</td><td>The requested endpoint or resource ID does not exist.</td></tr>
+                        <tr><td><code>422 Unprocessable</code></td><td>Validation Failure</td><td>Semantic errors (e.g., duplicate email address).</td></tr>
+                        <tr><td><code>500 Server Error</code></td><td>Internal Error</td><td>Unexpected backend exception; incident ID generated.</td></tr>
+                    </tbody>
+                </table>
+
+                <div class="section-title">Standardized Error Object Structure</div>
+<pre>{
+  "error": {
+    "code": "INVALID_PARAMETER",
+    "message": "The 'email' parameter must be a valid email address.",
+    "status_code": 400,
+    "timestamp": "2026-10-13T10:46:00Z"
+  }
+}</pre>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>
